@@ -1,6 +1,6 @@
 FROM vm/ubuntu:18.04
 
-# install docker-ce (from tutorial for ubuntu)
+# Install docker
 RUN apt-get update && \
     apt-get install apt-transport-https ca-certificates curl software-properties-common && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
@@ -8,14 +8,16 @@ RUN apt-get update && \
     apt-get update && \
     apt install docker-ce
 
-# install docker compose
+# Install docker-compose
 RUN curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
-# copy the root (i.e., repository root) to /root in the runner
+# Copy repository files
 COPY / /root
 
-RUN REPEATABLE docker-compose up -d --build --force-recreate --remove-orphans && sleep 5
+RUN /root/pull-images.sh && docker-compose up -d traefik postgresql
+RUN REPEATABLE docker-compose build --parallel
+RUN BACKGROUND docker-compose up
+RUN timeout 30 bash -c 'while ! curl -fsSo /dev/null localhost:8000; do sleep 1; done'
 
 EXPOSE WEBSITE localhost:8000
-
