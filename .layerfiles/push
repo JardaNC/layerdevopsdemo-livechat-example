@@ -1,0 +1,6 @@
+FROM /Layerfile
+
+WAIT /.layerfiles/base
+WAIT /.layerfiles/cypress
+
+RUN docker push web
