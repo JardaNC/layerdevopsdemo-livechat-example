@@ -1,6 +1,5 @@
 FROM vm/ubuntu:18.04
 
-
 # Install docker
 RUN apt-get update && \
     apt-get install apt-transport-https ca-certificates curl software-properties-common && \
@@ -20,5 +19,3 @@ RUN /root/pull-images.sh && docker-compose up -d traefik postgresql
 RUN REPEATABLE docker-compose build --parallel
 RUN BACKGROUND docker-compose up
 RUN timeout 30 bash -c 'while ! curl -fsSo /dev/null localhost:8000; do sleep 1; done'
-
-EXPOSE WEBSITE localhost:8000
