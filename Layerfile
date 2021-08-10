@@ -1,5 +1,6 @@
 FROM vm/ubuntu:18.04
 
+
 # Install docker
 RUN apt-get update && \
     apt-get install apt-transport-https ca-certificates curl software-properties-common && \
