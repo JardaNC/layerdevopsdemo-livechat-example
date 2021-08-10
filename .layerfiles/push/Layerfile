@@ -3,4 +3,6 @@ FROM /Layerfile
 WAIT /.layerfiles/base
 WAIT /.layerfiles/cypress
 
+SKIP REMAINING IF GIT_BRANCH!=prod
+
 RUN docker push web
